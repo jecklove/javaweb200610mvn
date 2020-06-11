@@ -1,0 +1,51 @@
+Listener：
+	1.作用：
+		监听web项目中的三个域对象：
+			application（ServletContext）、session（HttpSession）、request（HttpServletRequest）
+		监听的内容：
+			1.三个对象的创建和销毁
+			2.三个对象的属性变化（增加属性、修改属性、移除属性）
+			3.session中javabean的状态（钝化和活化）
+		特别注意：
+			所有的监听器都是接口，都需要程序员做实现。
+			
+	2.监听三个对象的创建和销毁
+		ServletContextListener：
+			创建：服务器启动时，每个项目都会创建一个ServletContext
+			销毁：服务器正常关闭
+			作用：用于项目启动时加载一些配置文件，或者在application中存放一些属性。
+			
+		HttpSessionListener：
+			创建：用户第一次请求项目，成功创建会话时。
+			销毁：session超时，session手动销毁，服务器非正常关闭（如果正常关闭，session会钝化到磁盘）。
+		
+		ServletRequestListener：
+			创建：用户请求时
+			销毁：响应生成时
+			
+	3.监听三个对象的属性变化
+		ServletContextAttributeListener：
+		
+		HttpSessionAttributeListener：
+			session域中，添加、修改、删除属性时触发对应的方法。
+			实践：防止一个账号多端登录。
+			思路：
+				1.用户登录，session存放onlineUser，监听器保存用户名和session对象到map集合。
+				2.用户退出登录，session中的onlineUser被删除，监听器删除map集合中保存的数据。
+				3.其他端使用该用户登录，session中会存放onlineUser，监听器判断该用户名已经存在，将之前的session对象失效并存放新的session对象。
+		
+		ServletRequestAttributeListener：
+		
+	4.监听session的钝化和活化
+		1.session的钝化和活化
+			钝化：session中的数据序列化到磁盘
+			活化：session中的数据从磁盘反序列化到session中
+			目的：降低服务器内存压力，对长时间不使用的session进行钝化，当用户再次使用session时，session数据活化。
+		2.HttpSessionActivationListener	
+			实体类实现该接口并重写事件方法。
+			实体类还需实现可序列化接口，否则无法正常钝化和活化。
+		
+		
+		
+		
+		
